@@ -3,7 +3,7 @@ function initPage() {
     const searchEl = document.getElementById("search-button");
     const clearEl = document.getElementById("clear-history");
     const nameEl = document.getElementById("city-name");
-    const currentPicEl = document.getElementById("current-pic"):
+    const currentPicEl = document.getElementById("current-pic");
     const currentTempEl = document.getElementById("temperature");
     const currentHumidityEl = document.getElementById("humidity");
     const currentWindEl = document.getElementById("wind-speed");
@@ -25,7 +25,7 @@ function initPage() {
             console.log(currentDate);
 
             const day = currentDate.getDate();
-            const mont = currentDate.getMonth();
+            const month = currentDate.getMonth();
             const year = currentDate.getFullYear();
             nameEl.innerHTML = response.data.name + " (" + month + "/" + day + "/" + year + ") ";
             let weatherPic = response.data.weather[0].icon;
@@ -45,7 +45,7 @@ function initPage() {
             currentUVEl.append(UVIndex);
         });
         
-        let cityID = respnse.data.id;
+        let cityID = response.data.id;
         let forecastQueryURL = "https://api.openweathermap.org/data/2.5/forecast?id=" + cityID + "&appid=" + APIKey;
         axios.get(forecastQueryURL)
         .then(function(response){
@@ -57,7 +57,7 @@ function initPage() {
                 const forecastIndex = i*8 + 4;
                 const forecastDate = new Date(response.data.list[forecastIndex].dt * 1000);
                 const forecastDay = forecastDate.getDate();
-                const forecastMonth = forecastDate.getMonth() + 1;
+                const forecastMonth = forecastDate.getMonth();
                 const forecastYear = forecastDate.getFullYear();
                 const forecastDateEl = document.createElement("p");
                 forecastDateEl.setAttribute("class","mt-3 mb-0 forecast-date");
@@ -65,10 +65,10 @@ function initPage() {
                 forecastEls[i].append(forecastDateEl);
                 const forecastWeatherEl = document.createElement("img");
                 forecastWeatherEl.setAttribute("src","https://openweathermap.org/img/wn/" + response.data.list[forecastIndex].weather[0].icon + "@2x.png");
-                forecastWeatherEl.setAttribute("alt",response.data.lost[forecastIndex].weather[0].description);
+                forecastWeatherEl.setAttribute("alt",response.data.list[forecastIndex].weather[0].description);
                 forecastEls[i].append(forecastWeatherEl);
                 const forecastTempEl = document.createElement("p");
-                forecastTempEl.innerHTML = "Temp: " + k2f(respnse.data.list[forecastIndex].main.temp) + " &#176F";
+                forecastTempEl.innerHTML = "Temp: " + k2f(response.data.list[forecastIndex].main.temp) + " &#176F";
                 forecastEls[i].append(forecastTempEl);
                 const forecastHumidityEl = document.createElement("p");
                 forecastHumidityEl.innerHTML = "Humidity: " + response.data.list[forecastIndex].main.humidity + "%";
