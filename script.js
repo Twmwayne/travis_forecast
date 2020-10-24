@@ -13,7 +13,7 @@ function initPage() {
     console.log(searchHistory); 
 
 
-    cost APIKey = "c9a9ed03a355403f4cb9a36e931c0b4a";
+    const APIKey = "c9a9ed03a355403f4cb9a36e931c0b4a";
 
     function getWeather(cityName) {
         let queryURL = "https://api.openweathermap.org/data/2.5/weather?q=" + cityName + "&appid=" + APIKey;
@@ -45,7 +45,41 @@ function initPage() {
             currentUVEl.append(UVIndex);
         });
         
+        let cityID = respnse.data.id;
+        let forecastQueryURL = "https://api.openweathermap.org/data/2.5/forecast?id=" + cityID + "&appid=" + APIKey;
+        axios.get(forecastQueryURL)
+        .then(function(response){
+            console.log(response);
+
+            const forecastEls = document.querySelectorAll(".forecast");
+            for(i=0; i < forecastEls.length; i++) {
+                forecastEls[i].innerHTML = "";
+                const forecastIndex = i*8 + 4;
+                const forecastDate = new Date(response.data.list[forecastIndex].dt * 1000);
+                const forecastDay = forecastDate.getDate();
+                const forecastMonth = forecastDate.getMonth() + 1;
+                const forecastYear = forecastDate.getFullYear();
+                const forecastDateEl = document.createElement("p");
+                forecastDateEl.setAttribute("class","mt-3 mb-0 forecast-date");
+                forecastDateEl.innerHTML = forecastMonth + "/" + forecastDay + "/" + forecastYear;
+                forecastEls[i].append(forecastDateEl);
+                const forecastWeatherEl = document.createElement("img");
+                forecastWeatherEl.setAttribute("src","https://openweathermap.org/img/wn/" + response.data.list[forecastIndex].weather[0].icon + "@2x.png");
+                forecastWeatherEl.setAttribute("alt",response.data.lost[forecastIndex].weather[0].description);
+                forecastEls[i].append(forecastWeatherEl);
+                const forecastTempEl = document.createElement("p");
+                forecastTempEl.innerHTML = "Temp: " + k2f(respnse.data.list[forecastIndex].main.temp) + " &#176F";
+                forecastEls[i].append(forecastTempEl);
+                const forecastHumidityEl = document.createElement("p");
+                forecastHumidityEl.innerHTML = "Humidity: " + response.data.list[forecastIndex].main.humidity + "%";
+                forecastEls[i].append(forecastHumidityEl);
+                }
+            })
+        });
         
-        }
     }
+
+    
+
+
 }
